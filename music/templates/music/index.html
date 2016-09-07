@@ -1,13 +1,56 @@
-<!-- loads the path to static files -->
-
 {% extends 'music/base.html' %}
+{% block albums_active %}active{% endblock %}
 
-{%  block body%}
+{% block body%}
 
-<ul>
-  {% for album in object_list %}
-  <li> <a href="{% url 'music:detail' album.id %}">{{ album.album_title}} </a></li>
-  {% endfor %}
-</ul>
+	<div class="albums-container container-fluid">
 
-{% endblock %}
+	{% if all_albums %}
+		<div id="products" class="row list-group">
+			{% for album in all_albums %}
+
+				<div class="col-sm-4 col-lg-2">
+					<div class="thumbnail">
+						<a href="{% url 'music:detail' album.id %}">
+							<img src="{{ album.album_logo.url }}" class="img-responsive">
+						</a>
+						<div class="caption">
+							<h2>{{ album.album_title }}</h2>
+							<h4>{{ album.artist }}</h4>
+
+							<!-- View Details -->
+							<a href="{% url 'music:detail' album.id %}" class="btn btn-primary btn-sm" role="button">View Details</a>
+
+							<!-- Delete Album -->
+							<form action="{% url 'music:album-delete' album.id %}" method="post" style="display: inline;">
+								{% csrf_token %}
+								<input type="hidden" name="album_id" value="{{ album.id }}" />
+								<button type="submit" class="btn btn-default btn-sm">
+									<span class="glyphicon glyphicon-trash"></span>
+								</button>
+
+							</form>
+
+							<!-- Favourite Album -->
+							<a href="#" class="btn btn-default btn-sm btn-favourite" role="button">
+								<span class="glyphicon glyphicon-star"></span>
+							</a>
+						</div>
+					</div>
+				</div>
+
+			{% endfor %}
+		</div>
+
+
+	{% else %}
+
+	{% endif %}
+
+
+
+	</div>
+
+
+
+{% endblock%}
